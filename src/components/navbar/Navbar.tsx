@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext";
 
 function Navbar() {
+
   // Objeto responsável por redirecionar o usuário para uma outra rota
   const navigate = useNavigate();
 
@@ -15,8 +16,11 @@ function Navbar() {
     navigate('/')
   }
 
-  return (
-    <>
+
+  let component: ReactNode
+
+  if (usuario.token !== "") {
+    component = (
       <div className='w-full flex justify-center py-4 bg-indigo-900 text-white'>
 
         <div className='container flex justify-between text-lg mx-8'>
@@ -34,6 +38,13 @@ function Navbar() {
           </div>
         </div>
       </div>
+    )
+
+  }
+
+  return (
+    <>
+      {component}
     </>
   )
 }

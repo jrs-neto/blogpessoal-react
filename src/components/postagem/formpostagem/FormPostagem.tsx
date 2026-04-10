@@ -1,4 +1,143 @@
+import { useContext, useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useNavigate, useParams } from "react-router-dom"
+import type Tema from "../../../models/Tema";
+import type Postagem from "../../../models/Postagem";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { atualizar, buscar, cadastrar } from "../../../services/Service";
+
 function FormPostagem() {
+
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [temas, setTemas] = useState<Tema[]>([])
+
+  const [tema, setTema] = useState<Tema>({ id: 0, descricao: '', })
+  const [postagem, setPostagem] = useState<Postagem>({} as Postagem)
+
+  const { id } = useParams<{ id: string }>()
+
+  const { usuario, handleLogout } = useContext(AuthContext)
+  const token = usuario.token
+
+  async function buscarPostagemPorId(id: string) {
+    try {
+      await buscar(`/postagens/${id}`, setPostagem, {
+        headers: { Authorization: token }
+      })
+    } catch (error: any) {
+      if (error.toString().includes('401')) {
+        handleLogout()
+      }
+    }
+  }
+
+  async function buscarTemaPorId(id: string) {
+    try {
+      await buscar(`/temas/${id}`, setTema, {
+        headers: { Authorization: token }
+      })
+    } catch (error: any) {
+      if (error.toString().includes('401')) {
+        handleLogout()
+      }
+    }
+  }
+
+  async function buscarTemas() {
+    try {
+      await buscar('/temas', setTemas, {
+        headers: { Authorization: token }
+      })
+    } catch (error: any) {
+      if (error.toString().includes('401')) {
+        handleLogout()
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (token === '') {
+      alert('Você precisa estar logado');
+      navigate('/');
+    }
+  }, [token])
+
+  useEffect(() => {
+    buscarTemas()
+
+    if (id !== undefined) {
+      buscarPostagemPorId(id)
+    }
+  }, [id])
+
+  useEffect(() => {
+    setPostagem({
+      ...postagem,
+      tema: tema,
+    })
+  }, [tema])
+
+  function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+    setPostagem({
+      ...postagem,
+      [e.target.name]: e.target.value,
+      tema: tema,
+      usuario: usuario
+    });
+  }
+
+  function retornar() {
+    navigate('/postagens');
+  }
+
+  async function gerarNovaPostagem(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setIsLoading(true)
+
+    if (id !== undefined) {
+      try {
+        await atualizar(`/postagens`, postagem, setPostagem, {
+          headers: {
+            Authorization: token,
+          },
+        });
+
+        alert('Postagem atualizada com sucesso')
+
+      } catch (error: any) {
+        if (error.toString().includes('401')) {
+          handleLogout()
+        } else {
+          alert('Erro ao atualizar a Postagem')
+        }
+
+      }
+    } else {
+      try {
+        await cadastrar(`/postagens`, postagem, setPostagem, {
+          headers: {
+            Authorization: token,
+          },
+        })
+
+        alert('Postagem cadastrar com sucesso');
+
+      } catch (error: any) {
+        if (error.toString().includes('401')) {
+          handleLogout()
+        } else {
+          alert('Erro ao cadastrar a Postagem');
+        }
+      }
+    }
+
+    setIsLoading(false)
+    retornar()
+  }
+
+  const carregandoTema = tema.descricao === '';
+
   return (
     <div className="text-4xl flex flex-col mx-auto items-center">
       <h1 className="text-4xl text-center my-8">Cadastrar Postagem</h1>
