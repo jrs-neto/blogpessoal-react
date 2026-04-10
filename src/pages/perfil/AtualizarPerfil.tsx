@@ -4,6 +4,7 @@ import { ClipLoader } from "react-spinners"
 import { AuthContext } from "../../contexts/AuthContext"
 import type Usuario from "../../models/Usuario"
 import { atualizar, buscar } from "../../services/Service"
+import { ToastAlerta } from "../../utils/ToastAlerta"
 
 
 function AtualizarPerfil() {
@@ -34,7 +35,7 @@ function AtualizarPerfil() {
       if (error.toString().includes("401")) {
         handleLogout()
       } else {
-        alert("Usuário não encontrado!")
+        ToastAlerta("Usuário não encontrado!", 'erro')
         retornar()
       }
     }
@@ -42,7 +43,7 @@ function AtualizarPerfil() {
 
   useEffect(() => {
     if (token === "") {
-      alert("Você precisa estar logado!")
+      ToastAlerta("Você precisa estar logado!", 'erro')
       navigate("/")
     }
   }, [token])
@@ -89,18 +90,18 @@ function AtualizarPerfil() {
             Authorization: token,
           },
         })
-        alert("Usuário atualizado! Efetue o Login Novamente!")
+        ToastAlerta("Usuário atualizado! Efetue o Login Novamente!", 'sucesso')
         sucesso()
       } catch (error: any) {
         if (error.toString().includes("401")) {
           handleLogout()
         } else {
-          alert("Erro ao atualizar o usuário!")
+          ToastAlerta("Erro ao atualizar o usuário!", 'erro')
           retornar()
         }
       }
     } else {
-      alert("Dados inconsistentes. Verifique as informações do usuário.")
+      ToastAlerta("Dados inconsistentes. Verifique as informações do usuário.", 'erro')
       setUser({ ...user, senha: "" })
       setConfirmarSenha("")
     }
