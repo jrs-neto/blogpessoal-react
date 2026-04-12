@@ -9,10 +9,10 @@ function Navbar() {
   const navigate = useNavigate();
 
   // Consumo do Contexto AuthContext (usamos a desestruturação para selecionar apenas o que precisamos)
-  const { usuario, handleLogout } = useContext(AuthContext);
+  const { handleLogout, usuario } = useContext(AuthContext);
 
   function logout() {
-    handleLogout();
+    handleLogout()
     ToastAlerta('O Usuário foi desconectado com sucesso!', 'sucesso')
     navigate('/')
   }
@@ -33,7 +33,6 @@ function Navbar() {
             <Link to='/temas' className='hover:underline'>Temas</Link>
             <Link to='/cadastrartema' className='hover:underline'>Cadastrar tema</Link>
             <Link to='/perfil' className="hover:underline">Perfil</Link>
-            <Link to='' onClick={logout} className="hover:underline"></Link>
             <Link to='' onClick={logout} className="hover:underline"> Sair</Link>
           </div>
         </div>

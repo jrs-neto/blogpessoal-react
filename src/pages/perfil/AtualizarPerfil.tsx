@@ -16,7 +16,7 @@ function AtualizarPerfil() {
   const [user, setUser] = useState<Usuario>({} as Usuario)
   const [confirmarSenha, setConfirmarSenha] = useState<string>("")
 
-  const { usuario, handleLogout } = useContext(AuthContext)
+  const { usuario, handleLogout, isLogout } = useContext(AuthContext)
   const token = usuario.token
   const id: string = usuario.id.toString()
 
@@ -43,7 +43,10 @@ function AtualizarPerfil() {
 
   useEffect(() => {
     if (token === "") {
-      ToastAlerta("Você precisa estar logado!", 'erro')
+      if (!isLogout) {
+        ToastAlerta("Você precisa estar logado!", "info")
+      }
+
       navigate("/")
     }
   }, [token])
@@ -90,7 +93,7 @@ function AtualizarPerfil() {
             Authorization: token,
           },
         })
-        ToastAlerta("Usuário atualizado! Efetue o Login Novamente!", 'sucesso')
+        ToastAlerta("Usuário atualizado com sucesso! \n Efetue o Login Novamente!", "sucesso")
         sucesso()
       } catch (error: any) {
         if (error.toString().includes("401")) {

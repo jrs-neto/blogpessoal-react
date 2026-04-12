@@ -15,12 +15,16 @@ function ListaPostagens() {
 
   const [postagens, setPostagens] = useState<Postagem[]>([])
 
-  const { usuario, handleLogout } = useContext(AuthContext)
+  const { usuario, handleLogout, isLogout } = useContext(AuthContext)
   const token = usuario.token
 
   useEffect(() => {
     if (token === '') {
-      ToastAlerta('Você precisa estar logado!', 'sucesso')
+
+      if (!isLogout) {
+        ToastAlerta('Você precisa estar logado!', "info")
+      }
+
       navigate('/')
     }
   }, [token])
@@ -35,7 +39,7 @@ function ListaPostagens() {
       setIsLoading(true)
 
       await buscar('/postagens', setPostagens, {
-        headers: { Authorization: token }
+        headers: { Authorization: token },
       })
     } catch (error: any) {
       if (error.toString().includes('401')) {
@@ -61,7 +65,7 @@ function ListaPostagens() {
       <div className="flex justify-center w-full my-4">
         <div className="container flex flex-col">
 
-          {(!isLoading && postagens.length === 0) && (
+          {!isLoading && postagens.length === 0 && (
             <span className="text-3xl text-center my-8">
               Nenhuma Postagem foi encontrada!
             </span>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import type Usuario from "../../models/Usuario";
 import { cadastrarUsuario } from "../../services/Service";
 import { ClipLoader } from "react-spinners";
+import { ToastAlerta } from "../../utils/ToastAlerta";
 
 function Cadastro() {
 
@@ -21,7 +22,7 @@ function Cadastro() {
     nome: '',
     usuario: '',
     senha: '',
-    foto: ''
+    foto: '',
   })
 
   // useEffect que vai controlar o redirecionamento para a página de login
@@ -36,7 +37,7 @@ function Cadastro() {
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
     setUsuario({
       ...usuario,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     })
   }
 
@@ -47,38 +48,35 @@ function Cadastro() {
 
   // Função para enviar os dados para o Backend (Submit)
   async function cadastrarNovoUsuario(e: SyntheticEvent<HTMLFormElement>) {
-    e.preventDefault();
+    e.preventDefault()
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     if (confirmarSenha === usuario.senha && usuario.senha.length >= 8) {
       try {
         await cadastrarUsuario('/usuarios/cadastrar', usuario, setUsuario);
 
-        ToastAlerta('Usuário Cadastrado com sucesso!');
+        ToastAlerta('Usuário Cadastrado com sucesso!', 'sucesso')
 
       } catch (error) {
-        ToastAlerta('Erro ao cadastrar o usuário!');
+        ToastAlerta('Erro ao cadastrar o usuário!', 'erro');
       }
 
     } else {
-      ToastAlerta('Dados do usuário estão inconsistentes! ');
+      ToastAlerta('Dados do usuário estão inconsistentes!', 'info')
       setUsuario({
         ...usuario,
-        senha: ''
+        senha: '',
       })
-      setConfirmarSenha('');
+      setConfirmarSenha('')
     }
 
-    setIsLoading(false);
+    setIsLoading(false)
   }
 
   function retornar() {
     navigate('/')
   }
-
-  console.log(JSON.stringify(usuario));
-  console.log(confirmarSenha);
 
   return (
     <>
@@ -100,8 +98,11 @@ function Cadastro() {
             />
           </div>
           <div className="flex flex-col w-full">
-            <label htmlFor="nome">Usuario</label>
-            <input type="text"
+            <label htmlFor="usuario">
+              Usuario
+            </label>
+            <input
+              type="text"
               id="usuario"
               name="usuario"
               placeholder="Usuario"
@@ -111,49 +112,57 @@ function Cadastro() {
             />
           </div>
           <div className="flex flex-col w-full">
-            <label htmlFor="nome">Foto</label>
-            <input type="text"
+            <label htmlFor="foto">Foto</label>
+            <input
+              type="text"
               id="foto"
               name="foto"
               placeholder="Foto"
               className="border-2 border-slate-700 rounded p-2"
               value={usuario.foto}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+              onChange={(
+                e: ChangeEvent<HTMLInputElement>,
+              ) => atualizarEstado(e)}
             />
           </div>
           <div className="flex flex-col w-full">
-            <label htmlFor="nome">Senha</label>
-            <input type="password"
+            <label htmlFor="senha">Senha</label>
+            <input
+              type="password"
               id="senha"
               name="senha"
               placeholder="Senha"
               className="border-2 border-slate-700 rounded p-2"
               value={usuario.senha}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+              onChange={(
+                e: ChangeEvent<HTMLInputElement>,
+              ) => atualizarEstado(e)}
             />
           </div>
           <div className="flex flex-col w-full">
-            <label htmlFor="nome">Confirmar Senha</label>
+            <label htmlFor="confirmarSenha">Confirmar Senha</label>
             <input type="password"
               id="confirmarSenha"
               name="confirmarSenha"
               placeholder="Confirmar Senha"
               className="border-2 border-slate-700 rounded p-2"
               value={confirmarSenha}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => handleConfirmarSenha(e)} />
+              onChange={(
+                e: ChangeEvent<HTMLInputElement>,
+              ) => handleConfirmarSenha(e)}
+            />
           </div>
           <div className="flex justify-around w-full gap-8">
             <button type="reset" className="rounded text-white bg-red-400 hover:bg-red-700 w-1/2 py-2" onClick={retornar}>Cancelar</button>
             <button type="submit" className="rounded text-white bg-indigo-400 hover:bg-indigo-900 w-1/2 py-2 flex justify-center">
-              {
-                isLoading ?
-                  <ClipLoader
-                    color="#ffffff"
-                    size={24}
-                  />
-                  :
-                  <span>Cadastrar</span>
-              }
+              {isLoading ? (
+                <ClipLoader
+                  color="#ffffff"
+                  size={24}
+                />
+              ) : (
+                <span>Cadastrar</span>
+              )}
             </button>
           </div>
         </form>

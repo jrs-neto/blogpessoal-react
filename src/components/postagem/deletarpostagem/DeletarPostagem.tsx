@@ -22,8 +22,8 @@ function DeletarPostagem() {
     try {
       await buscar(`/postagens/${id}`, setPostagem, {
         headers: {
-          'Authorization': token
-        }
+          'Authorization': token,
+        },
       })
     } catch (error: any) {
       if (error.toString().includes('401')) {
@@ -34,7 +34,7 @@ function DeletarPostagem() {
 
   useEffect(() => {
     if (token === '') {
-      ToastAlerta('Você precisa estar logado', 'erro')
+      ToastAlerta('Você precisa estar logado', "info")
       navigate('/')
     }
   }, [token])
@@ -51,8 +51,8 @@ function DeletarPostagem() {
     try {
       await deletar(`/postagens/${id}`, {
         headers: {
-          'Authorization': token
-        }
+          'Authorization': token,
+        },
       })
 
       ToastAlerta('Postagem apagada com sucesso', 'sucesso')
@@ -101,13 +101,14 @@ function DeletarPostagem() {
                         hover:bg-indigo-600 flex items-center justify-center'
             onClick={deletarPostagem}>
 
-            {isLoading ?
+            {isLoading ? (
               <ClipLoader
                 color="#ffffff"
                 size={24}
-              /> :
+              />
+            ) : (
               <span>Sim</span>
-            }
+            )}
 
           </button>
         </div>

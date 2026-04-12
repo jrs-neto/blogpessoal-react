@@ -33,15 +33,15 @@ function FormTema() {
       setIsLoading(true)
 
       await buscar(`/temas/${id}`, setTema, {
-        headers: { Authorization: token }
-      });
+        headers: { Authorization: token },
+      })
 
     } catch (error: any) {
       if (error.toString().includes('401')) {
-        handleLogout();
+        handleLogout()
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
 
   }
@@ -49,7 +49,7 @@ function FormTema() {
   // Cria um useEffect para monitorar o token
   useEffect(() => {
     if (token === '') {
-      ToastAlerta('Você precisa estar logado!', 'erro');
+      ToastAlerta('Você precisa estar logado!', 'info');
       navigate('/')
     }
   }, [token])
@@ -57,7 +57,7 @@ function FormTema() {
   // Cria um useEffect para monitorar o id (rota)
   useEffect(() => {
     if (id !== undefined) {
-      buscarTemaPorId();
+      buscarTemaPorId()
     }
   }, [id])
 
@@ -65,15 +65,15 @@ function FormTema() {
   function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
     setTema({
       ...tema,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     })
   }
 
   async function gerarNovoTema(e: SyntheticEvent<HTMLFormElement>) {
 
-    e.preventDefault();
+    e.preventDefault()
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     if (id !== undefined) {
 
@@ -81,7 +81,7 @@ function FormTema() {
       try {
 
         await atualizar('/temas', tema, setTema, {
-          headers: { Authorization: token }
+          headers: { Authorization: token },
         });
 
         ToastAlerta('Tema atualizado com sucesso!', 'sucesso')
@@ -89,9 +89,9 @@ function FormTema() {
       } catch (error: any) {
 
         if (error.toString().includes('401')) {
-          handleLogout();
+          handleLogout()
         } else {
-          ToastAlerta('Erro ao Atualizar o Tema!', 'erro');
+          ToastAlerta('Erro ao Atualizar o Tema!', 'erro')
         }
       }
 
@@ -101,30 +101,28 @@ function FormTema() {
       try {
 
         await cadastrar('/temas', tema, setTema, {
-          headers: { Authorization: token }
-        });
+          headers: { Authorization: token },
+        })
 
         ToastAlerta('Tema cadastrado com sucesso!', 'sucesso')
 
       } catch (error: any) {
         if (error.toString().includes('401')) {
-          handleLogout();
+          handleLogout()
         } else {
-          ToastAlerta('Erro ao Cadastrar o Tema!', 'erro');
+          ToastAlerta('Erro ao Cadastrar o Tema!', 'erro')
         }
       }
 
     }
 
-    setIsLoading(false);
-    retornar();
+    setIsLoading(false)
+    retornar()
   }
 
   function retornar() {
-    navigate('/temas');
+    navigate('/temas')
   }
-
-  console.log(JSON.stringify(tema));
 
   return (
     <div className="container flex flex-col items-center justify-center mx-auto">
@@ -143,15 +141,18 @@ function FormTema() {
           />
         </div>
         <button className="rounded text-slate-100 bg-indigo-400 hover:bg-indigo-800 w-1/2 py-2 mx-auto flex justify-center" type="submit">
-          {
-            isLoading ?
-              <ClipLoader
-                color="#ffffff"
-                size={24}
-              />
-              :
-              <span>{id === undefined ? "Cadastrar" : "Atualizar"}</span>
-          }
+          {isLoading ? (
+            <ClipLoader
+              color="#ffffff"
+              size={24}
+            />
+          ) : (
+            <span>
+              {id === undefined
+                ? 'Cadastrar'
+                : 'Atualizar'}
+            </span>
+          )}
         </button>
       </form>
     </div>

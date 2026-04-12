@@ -9,7 +9,7 @@ function Login() {
   // Objeto responsável por redirecionar o usuário para uma outra rota
   const navigate = useNavigate();
 
-  // Estado usuario, que vai guardar os dados do usuario que será autenticado
+  // Estado usuario, que vai guardar os dados do usuário que será autenticado
   const [usuarioLogin, setUsuarioLogin] = useState<UsuarioLogin>({} as UsuarioLogin);
 
   // Consumo do Contexto AuthContext (usamos a desestruturação para selecionar apenas o que precisamos)
@@ -34,8 +34,6 @@ function Login() {
     handleLogin(usuarioLogin);
   }
 
-  console.log(JSON.stringify(usuarioLogin));
-
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold">
@@ -43,23 +41,27 @@ function Login() {
           <h2 className="text-slate-900 text-5xl">Entrar</h2>
           <div className="flex flex-col w-full">
             <label htmlFor="usuario">Usuário</label>
-            <input type="text"
+            <input
+              type="text"
               id="usuario"
               name="usuario"
               placeholder="Usuario"
               className="border-2 border-slate-700 rounded p-2"
               value={usuarioLogin.usuario}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)} />
+              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+            />
           </div>
           <div className="flex flex-col w-full">
-            <label htmlFor="usuario">Senha</label>
-            <input type="password"
+            <label htmlFor="senha">Senha</label>
+            <input
+              type="password"
               id="senha"
               name="senha"
               placeholder="Senha"
               className="border-2 border-slate-700 rounded p-2"
               value={usuarioLogin.senha}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)} />
+              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+            />
           </div>
           <button type="submit" className="rounded bg-indigo-400 flex justify-center hover:bg-indigo-900 text-white w-1/2 py-2">{
             isLoading ?
@@ -73,20 +75,23 @@ function Login() {
 
               <span>Entrar</span>
 
-          }</button>
+          }
+          </button>
 
           <hr className="border-slate-800 w-full" />
 
           <p>
-            Ainda não tem uma conta? {' '}
-            <Link to="/cadastro" className="text-indigo-800 hover:underline">Cadastre-se</Link>
+            Ainda não tem uma conta?{' '}
+            <Link to="/cadastro" className="text-indigo-800 hover:underline">
+              Cadastre-se
+            </Link>
           </p>
         </form>
         <div className="bg-[url('https://ik.imagekit.io/jrsneto/Blog%20Pessoal/Login.png')] lg:block hidden bg-no-repeat w-full min-h-screen bg-cover bg-center"></div>
       </div>
 
     </>
-  )
+  );
 }
 
-export default Login
+export default Login;

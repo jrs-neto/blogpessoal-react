@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useContext, useEffect, useState, type ChangeEvent, type SyntheticEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import type Tema from "../../../models/Tema";
 import type Postagem from "../../../models/Postagem";
@@ -14,18 +14,18 @@ function FormPostagem() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [temas, setTemas] = useState<Tema[]>([])
 
-  const [tema, setTema] = useState<Tema>({ id: 0, descricao: '', })
+  const [tema, setTema] = useState<Tema>({ id: 0, descricao: '' })
   const [postagem, setPostagem] = useState<Postagem>({} as Postagem)
-
-  const { id } = useParams<{ id: string }>()
 
   const { usuario, handleLogout } = useContext(AuthContext)
   const token = usuario.token
 
+  const { id } = useParams<{ id: string }>()
+
   async function buscarPostagemPorId(id: string) {
     try {
       await buscar(`/postagens/${id}`, setPostagem, {
-        headers: { Authorization: token }
+        headers: { Authorization: token },
       })
     } catch (error: any) {
       if (error.toString().includes('401')) {
@@ -37,7 +37,7 @@ function FormPostagem() {
   async function buscarTemaPorId(id: string) {
     try {
       await buscar(`/temas/${id}`, setTema, {
-        headers: { Authorization: token }
+        headers: { Authorization: token },
       })
     } catch (error: any) {
       if (error.toString().includes('401')) {
@@ -49,7 +49,7 @@ function FormPostagem() {
   async function buscarTemas() {
     try {
       await buscar('/temas', setTemas, {
-        headers: { Authorization: token }
+        headers: { Authorization: token },
       })
     } catch (error: any) {
       if (error.toString().includes('401')) {
@@ -60,7 +60,7 @@ function FormPostagem() {
 
   useEffect(() => {
     if (token === '') {
-      ToastAlerta('Você precisa estar logado', 'erro');
+      ToastAlerta('Você precisa estar logado', 'info');
       navigate('/');
     }
   }, [token])
@@ -85,15 +85,15 @@ function FormPostagem() {
       ...postagem,
       [e.target.name]: e.target.value,
       tema: tema,
-      usuario: usuario
-    });
+      usuario: usuario,
+    })
   }
 
   function retornar() {
-    navigate('/postagens');
+    navigate('/postagens')
   }
 
-  async function gerarNovaPostagem(e: FormEvent<HTMLFormElement>) {
+  async function gerarNovaPostagem(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsLoading(true)
 
@@ -103,7 +103,8 @@ function FormPostagem() {
           headers: {
             Authorization: token,
           },
-        });
+        },
+        );
 
         ToastAlerta('Postagem atualizada com sucesso', 'sucesso')
 
@@ -121,15 +122,16 @@ function FormPostagem() {
           headers: {
             Authorization: token,
           },
-        })
+        },
+        )
 
-        ToastAlerta('Postagem cadastrar com sucesso', 'sucesso');
+        ToastAlerta('Postagem cadastrada com sucesso', 'sucesso');
 
       } catch (error: any) {
         if (error.toString().includes('401')) {
           handleLogout()
         } else {
-          ToastAlerta('Erro ao cadastrar a Postagem', 'erro');
+          ToastAlerta('Erro ao cadastrar a Postagem', 'erro')
         }
       }
     }
@@ -141,7 +143,7 @@ function FormPostagem() {
   const carregandoTema = tema.descricao === '';
 
   return (
-    <div className="text-4xl flex flex-col mx-auto items-center">
+    <div className="container flex flex-col mx-auto items-center">
       <h1 className="text-4xl text-center my-8">
         {id !== undefined ? 'Editar Postagem' : 'Cadastrar Postagem'}
       </h1>
@@ -174,7 +176,10 @@ function FormPostagem() {
         <div className="flex flex-col gap-2">
           <p>Tema da Postagem</p>
           <select name="tema" id="tema" className="border p-2 border-slate-800 rounded"
-            onChange={(e) => buscarTemaPorId(e.currentTarget.value)}
+            onChange={(e) => buscarTemaPorId(e.currentTarget.value,
+
+            )
+            }
           >
             <option value="" selected disabled>Selecione um Tema</option>
 
@@ -188,13 +193,18 @@ function FormPostagem() {
         </div>
 
         <button type="submit" className="rounded disabled:bg-slate-200 bg-indigo-400 hover:bg-indigo-800 text-white font-bold w-1/2 mx-auto py-2 flex justify-center" disabled={carregandoTema}>
-          {isLoading ?
+          {isLoading ? (
             <ClipLoader
-              color='#ffffff'
+              color="#ffffff"
               size={24}
-            /> :
-            <span>{id === undefined ? 'Cadastrar' : 'Atualizar'}</span>
-          }
+            />
+          ) : (
+            <span>
+              {id === undefined
+                ? 'Cadastrar'
+                : 'Atualizar'}
+            </span>
+          )}
 
         </button>
       </form>

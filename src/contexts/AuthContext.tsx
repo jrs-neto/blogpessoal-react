@@ -1,4 +1,4 @@
-import { createContext, useState, type ReactNode } from "react";
+import { createContext, useRef, useState, type ReactNode } from "react";
 import type UsuarioLogin from "../models/UsuarioLogin";
 import { login } from "../services/Service";
 import { ToastAlerta } from "../utils/ToastAlerta";
@@ -8,6 +8,7 @@ interface AuthContextProps {
   handleLogout(): void
   handleLogin(usuario: UsuarioLogin): Promise<void>
   isLoading: boolean
+  isLogout: boolean
 }
 
 interface AuthProviderProps {
@@ -28,19 +29,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
     token: ""
   });
 
-  // Inicialiar o estado isLoading (controlar o loader do componente Login)
+  // Inicializar o estado isLoading (controlar o loader do componente Login)
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  //UseRef - Sinaliza se o logout foi feito pelo usuário (opção Sair)
+  const isLogout = useRef(false)//Imune a renderização
+
   // Implementação da função de Login
-  async function handleLogin(UsuarioLogin: UsuarioLogin) {
+  async function handleLogin(usuarioLogin: UsuarioLogin) {
 
     setIsLoading(true);
 
     try {
-      await login('/usuarios/logar', UsuarioLogin, setUsuario)
-      ToastAlerta('Usuário autenticado com sucesso!', 'sucesso')
+      await login('/usuarios/logar', usuarioLogin, setUsuario);
+      ToastAlerta('Usuário autenticado com sucesso!', 'sucesso');
+      // Define isLogout como false para aguardar a saída via logout do usuário
+      isLogout.current = false
     } catch (error) {
-      ToastAlerta('Os dados do Usuário estão incosistentes!', 'erro')
+      ToastAlerta('Os dados do Usuário estão inconsistentes!', 'erro');
     }
 
     setIsLoading(false);
@@ -48,6 +54,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Implementação da função de Logout
   function handleLogout() {
+    // Define isLogout como true para sinalizar que o usuário fez o logout
+    isLogout.current = true
     setUsuario({
       id: 0,
       nome: "",
@@ -59,7 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ usuario, handleLogin, handleLogout, isLoading }}>
+    <AuthContext.Provider value={{ usuario, handleLogin, handleLogout, isLoading, isLogout: isLogout.current }}>
       {children}
     </AuthContext.Provider>
   )

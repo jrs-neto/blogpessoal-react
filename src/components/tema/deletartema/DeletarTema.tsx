@@ -31,25 +31,25 @@ function DeletarTema() {
   async function buscarTemaPorId() {
     try {
 
-      setIsLoading(true);
+      setIsLoading(true)
 
       await buscar(`/temas/${id}`, setTema, {
-        headers: { Authorization: token }
-      });
+        headers: { Authorization: token },
+      })
 
     } catch (error: any) {
       if (error.toString().includes('401')) {
-        handleLogout();
+        handleLogout()
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }
 
   // Cria um useEffect para monitorar o token
   useEffect(() => {
     if (token === '') {
-      ToastAlerta('Você precisa estar logado!', 'erro');
+      ToastAlerta('Você precisa estar logado!', 'info');
       navigate('/')
     }
   }, [token])
@@ -57,33 +57,33 @@ function DeletarTema() {
   // Cria um useEffect para monitorar o id (rota)
   useEffect(() => {
     if (id !== undefined) {
-      buscarTemaPorId();
+      buscarTemaPorId()
     }
   }, [id])
 
   function retornar() {
-    navigate('/temas');
+    navigate('/temas')
   }
 
   async function deletarTema() {
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
 
       await deletar(`/temas/${id}`, {
-        headers: { Authorization: token }
-      });
+        headers: { Authorization: token },
+      })
 
       ToastAlerta('Tema deletado com sucesso!', 'sucesso')
 
     } catch (error: any) {
       if (error.toString().includes('401')) {
-        handleLogout();
+        handleLogout()
       }
     }
 
-    setIsLoading(false);
+    setIsLoading(false)
     retornar()
 
   }
@@ -112,15 +112,14 @@ function DeletarTema() {
                                    hover:bg-indigo-600 flex items-center justify-center'
             onClick={deletarTema}
           >
-            {
-              isLoading ?
-                <ClipLoader
-                  color="#ffffff"
-                  size={24}
-                />
-                :
-                <span>Sim</span>
-            }
+            {isLoading ? (
+              <ClipLoader
+                color="#ffffff"
+                size={24}
+              />
+            ) : (
+              <span>Sim</span>
+            )}
           </button>
         </div>
       </div>
