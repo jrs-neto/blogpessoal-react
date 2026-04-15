@@ -5,6 +5,7 @@ import type Postagem from "../../../models/Postagem"
 import { buscar, deletar } from "../../../services/Service"
 import { ClipLoader } from "react-spinners"
 import { ToastAlerta } from "../../../utils/ToastAlerta"
+import { Trash, WarningCircle, ArrowLeft, BookmarkSimple } from "@phosphor-icons/react"
 
 function DeletarPostagem() {
 
@@ -74,47 +75,62 @@ function DeletarPostagem() {
   }
 
   return (
-    <div className='container w-1/3 mx-auto'>
-      <h1 className='text-4xl text-center my-4'>Deletar Postagem</h1>
+    <div className='min-h-[80vh] flex items-center justify-center py-12 px-6 font-inter'>
+      <div className='w-full max-w-xl bg-white rounded-[40px] shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden'>
 
-      <p className='text-center font-semibold mb-4'>
-        Você tem certeza de que deseja apagar a postagem a seguir?
-      </p>
-
-      <div className='border flex flex-col rounded-2xl overflow-hidden justify-between'>
-        <header
-          className='py-2 px-6 bg-indigo-600 text-white font-bold text-2xl'>
-          Postagem
-        </header>
-        <div className="p-4">
-          <p className='text-xl h-full'>{postagem.titulo}</p>
-          <p>{postagem.texto}</p>
+        <div className="bg-red-50 p-10 flex flex-col items-center text-center space-y-4">
+          <div className="w-20 h-20 bg-red-100 rounded-3xl flex items-center justify-center text-red-600 shadow-inner">
+            <WarningCircle size={48} weight="bold" />
+          </div>
+          <div className="space-y-2">
+            <h1 className='text-3xl font-black text-slate-900 tracking-tight'>Confirmar Exclusão</h1>
+            <p className='text-slate-500 font-medium max-w-xs mx-auto'>
+              Esta ação é permanente. Você tem certeza que deseja deletar esta postagem?
+            </p>
+          </div>
         </div>
-        <div className="flex">
-          <button
-            className='text-slate-100 bg-red-400 hover:bg-red-600 w-full py-2'
-            onClick={retornar}>
-            Não
-          </button>
-          <button
-            className='w-full text-slate-100 bg-indigo-400 
-                        hover:bg-indigo-600 flex items-center justify-center'
-            onClick={deletarPostagem}>
 
-            {isLoading ? (
-              <ClipLoader
-                color="#ffffff"
-                size={24}
-              />
-            ) : (
-              <span>Sim</span>
-            )}
+        <div className="p-10 space-y-6">
+          <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-4">
+            <div className="flex items-center gap-2 text-indigo-600">
+              <BookmarkSimple size={18} weight="fill" />
+              <span className="text-xs font-black uppercase tracking-widest">{postagem.tema?.descricao || 'Sem Tema'}</span>
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-xl font-black text-slate-800 leading-tight">{postagem.titulo}</h2>
+              <p className="text-slate-600 font-medium line-clamp-2">{postagem.texto}</p>
+            </div>
+          </div>
 
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={retornar}
+              className="w-full flex items-center justify-center gap-2 py-4 px-4 rounded-2xl text-slate-600 font-black bg-slate-100 hover:bg-slate-200 transition-all uppercase tracking-widest text-sm"
+            >
+              <ArrowLeft size={20} weight="bold" />
+              <span>Cancelar</span>
+            </button>
+
+            <button
+              onClick={deletarPostagem}
+              disabled={isLoading}
+              className="w-full flex items-center justify-center gap-2 py-4 px-4 rounded-2xl text-white font-black bg-red-600 hover:bg-red-700 active:scale-[0.98] transition-all shadow-xl shadow-red-100 uppercase tracking-widest text-sm"
+            >
+              {isLoading ? (
+                <ClipLoader color="#ffffff" size={24} />
+              ) : (
+                <>
+                  <Trash size={20} weight="bold" />
+                  <span>Sim, Apagar</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
+
       </div>
     </div>
   )
 }
 
-export default DeletarPostagem
+export default DeletarPostagem;

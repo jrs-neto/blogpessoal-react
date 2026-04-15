@@ -51,37 +51,36 @@ function ListaPostagens() {
   }
 
   return (
-    <>
-
+    <div className="w-full min-h-[400px] flex flex-col items-center">
+      
       {isLoading && (
-        <div className="flex justify-center w-full my-8">
+        <div className="flex flex-col items-center justify-center py-20 gap-4">
           <SyncLoader
-            color="#312e81"
-            size={32}
+            color="#4f46e5"
+            size={18}
+            margin={4}
           />
+          <span className="text-indigo-600 font-black uppercase tracking-widest text-xs">Carregando Feed...</span>
         </div>
       )}
 
-      <div className="flex justify-center w-full my-4">
-        <div className="container flex flex-col">
+      {!isLoading && postagens.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200 w-full max-w-2xl mx-auto shadow-sm">
+          <span className="text-2xl font-black text-slate-800 tracking-tight">Feed Vazio</span>
+          <p className="text-slate-500 font-medium">Seja o primeiro a compartilhar algo incrível!</p>
+        </div>
+      )}
 
-          {!isLoading && postagens.length === 0 && (
-            <span className="text-3xl text-center my-8">
-              Nenhuma Postagem foi encontrada!
-            </span>
-          )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 
-                                    lg:grid-cols-3 gap-8">
-            {
-              postagens.map((postagem) => (
-                <CardPostagem key={postagem.id} postagem={postagem} />
-              ))
-            }
+      {!isLoading && postagens.length > 0 && (
+        <div className="container mx-auto px-4 lg:px-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {postagens.map((postagem) => (
+              <CardPostagem key={postagem.id} postagem={postagem} />
+            ))}
           </div>
         </div>
-      </div>
-    </>
+      )}
+    </div>
   )
 }
 export default ListaPostagens;

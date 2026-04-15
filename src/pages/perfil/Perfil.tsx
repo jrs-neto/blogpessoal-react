@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext"
 import { ToastAlerta } from "../../utils/ToastAlerta"
+import { UserCircle, EnvelopeSimple, PencilSimple, Camera } from "@phosphor-icons/react"
 
 function Perfil() {
   const navigate = useNavigate()
@@ -17,37 +18,78 @@ function Perfil() {
   }, [token])
 
   return (
-    <div className="flex justify-center mx-4">
-      <div className="container mx-auto my-4 rounded-2xl overflow-hidden">
-        <img
-          className="w-full h-72 object-cover border-b-8 border-white"
-          src="https://i.imgur.com/ZZFAmzo.jpg"
-          alt="Capa do Perfil"
-        />
+    <div className="min-h-screen bg-slate-50 py-12 px-4">
+      <div className="container mx-auto max-w-4xl">
 
-        <img
-          className="rounded-full w-56 mx-auto -mt-32 border-8 border-white relative z-10"
-          src={usuario.foto}
-          alt={`Foto de perfil de ${usuario.nome}`}
-        />
+        <div className="bg-white rounded-[40px] shadow-2xl shadow-slate-200 overflow-hidden border border-slate-100">
 
-        <div
-          className="relative -mt-24 h-90 flex flex-col
-                    bg-sky-500 text-white text-2xl items-center justify-center"
-        >
-          <p>Nome: {usuario.nome} </p>
-          <p>Email: {usuario.usuario}</p>
+          <div className="relative h-64 bg-indigo-600 overflow-hidden">
+            <img
+              className="w-full h-full object-cover opacity-40 mix-blend-overlay"
+              src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070&auto=format&fit=crop"
+              alt="Capa do Perfil"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          </div>
 
-          {/* Botão de editar */}
-          <Link to={`/atualizarperfil`} className="mt-8 w-full md:w-auto">
-            <button className="w-full md:w-auto bg-linear-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
-              Editar Perfil
-            </button>
-          </Link>
+          <div className="relative px-8 pb-12">
+            <div className="flex flex-col items-center -mt-24 sm:flex-row sm:items-end sm:gap-8">
+              <div className="relative group">
+                <img
+                  className="w-48 h-48 rounded-[32px] border-8 border-white shadow-2xl object-cover bg-white"
+                  src={usuario.foto || 'https://i.imgur.com/8RK9k6J.png'}
+                  alt={`Foto de perfil de ${usuario.nome}`}
+                />
+                <button className="absolute bottom-4 right-4 p-3 bg-indigo-600 text-white rounded-2xl shadow-lg border-4 border-white opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                  <Camera size={20} weight="bold" />
+                </button>
+              </div>
+
+              <div className="mt-6 flex flex-col items-center sm:items-start flex-grow">
+                <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+                  {usuario.nome}
+                </h1>
+                <p className="text-indigo-600 font-bold uppercase tracking-widest text-sm mt-1">
+                  Autor Independente
+                </p>
+              </div>
+
+              <div className="mt-8 sm:mt-0">
+                <Link to={`/atualizarperfil`}>
+                  <button className="flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-slate-800 transition-all active:scale-95 shadow-xl shadow-slate-200">
+                    <PencilSimple size={20} weight="bold" />
+                    <span>Editar Perfil</span>
+                  </button>
+                </Link>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 pt-12 border-t border-slate-100">
+              <div className="flex items-center gap-4 p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
+                  <UserCircle size={28} weight="bold" />
+                </div>
+                <div>
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Nome Completo</p>
+                  <p className="text-lg font-bold text-slate-800">{usuario.nome}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
+                  <EnvelopeSimple size={28} weight="bold" />
+                </div>
+                <div>
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Email de Acesso</p>
+                  <p className="text-lg font-bold text-slate-800">{usuario.usuario}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default Perfil
+export default Perfil;
